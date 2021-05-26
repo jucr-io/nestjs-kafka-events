@@ -19,7 +19,10 @@
     "kafka events",
     "nest",
     "nest events",
-    "nestjs events"
+    "nestjs events",
+    "confluent",
+    "schema registry",
+    "schema"
   ],
   "scripts": {
     "prebuild": "rimraf dist",
