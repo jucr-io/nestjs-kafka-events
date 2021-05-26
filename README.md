@@ -25,7 +25,7 @@ Just to give you an idea how a workflow could look like:
 
 ```typescript
 // (...)
-import { KafkaModule } from 'nestjs-kafka-events';
+import { KafkaModule } from '@jucr/nestjs-kafka-events';
 
 @Module({
   imports: [
@@ -67,7 +67,7 @@ and [@kafkajs/confluent-schema-registry](https://kafkajs.github.io/confluent-sch
 
 ```typescript
 // (...)
-import { IKafkaEvent, KafkaEventHandler } from 'nestjs-kafka-events';
+import { IKafkaEvent, KafkaEventHandler } from '@jucr/nestjs-kafka-events';
 
 interface MyEvent {
   userId: string;
@@ -96,7 +96,7 @@ export class AppController {
 ▶️ Produce events:
 ```typescript
 // (...)
-import { KafkaEventEmitter, KafkaService } from 'nestjs-kafka-events';
+import { KafkaEventEmitter, KafkaService } from '@jucr/nestjs-kafka-events';
 
 interface MyEvent {
   userId: string;
