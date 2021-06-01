@@ -11,12 +11,15 @@ import {
   Controller,
   Injectable as IInjectable,
 } from '@nestjs/common/interfaces';
-import { IKafkaEvent, KafkaEventHandlerFunction } from './interfaces';
+import { IKafkaEvent } from './interfaces';
 import { KafkaLogger } from './loggers';
 
 @Injectable()
 export class KafkaEventFunctionsService {
-  private readonly eventHandlerMap: Map<string, KafkaEventHandlerFunction>;
+  private readonly eventHandlerMap: Map<
+    string,
+    { method: string | symbol; instance: any }
+  >;
   private eventEmitterTopics: Set<string>;
 
   constructor(
@@ -88,7 +91,10 @@ export class KafkaEventFunctionsService {
         return prev.concat(curr);
       });
     for (const eventHandler of eventHandlers) {
-      this.eventHandlerMap.set(eventHandler.topic, eventHandler.callback);
+      this.eventHandlerMap.set(eventHandler.topic, {
+        instance: eventHandler.target,
+        method: eventHandler.methodName,
+      });
     }
     for (const eventEmitter of eventEmitters) {
       this.eventEmitterTopics = new Set([
@@ -131,7 +137,9 @@ export class KafkaEventFunctionsService {
       this.kafkaLogger.warn(`Unable to find handler for topic ${topic}`);
       return;
     }
-    return await handler(event);
+    return await handler.instance[handler.method].apply(handler.instance, [
+      event,
+    ]);
   }
 
   /**

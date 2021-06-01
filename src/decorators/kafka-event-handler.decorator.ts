@@ -19,7 +19,7 @@ export const KafkaEventHandler = (topic: string): MethodDecorator => {
   ) => {
     SetMetadata<string, KafkaEventHandlerMetadata>(KAFKA_EVENT_HANDLER, {
       topic,
-      target: target.constructor.name,
+      target,
       methodName: propertyKey,
       callback: descriptor.value,
     })(target, propertyKey, descriptor);
