@@ -1,6 +1,6 @@
 {
   "name": "@jucr/nestjs-kafka-events",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Lightweight, tested, straight-forward wrapper around KafkaJS and Confluent's Schema Registry.",
   "author": "Max Gr. <grollmann@jucr.de>",
   "private": false,

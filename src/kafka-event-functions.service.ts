@@ -18,7 +18,7 @@ import { KafkaLogger } from './loggers';
 export class KafkaEventFunctionsService {
   private readonly eventHandlerMap: Map<
     string,
-    { method: string | symbol; instance: any }
+    { methodName: string | symbol; target: any }
   >;
   private eventEmitterTopics: Set<string>;
 
@@ -75,7 +75,7 @@ export class KafkaEventFunctionsService {
     const eventEmitters = instanceWrappers
       .map(({ instance }) => {
         const instancePrototype = Object.getPrototypeOf(instance);
-        return this.metadataScanner.scanFromPrototype(
+        const r = this.metadataScanner.scanFromPrototype(
           instance,
           instancePrototype,
           (method) =>
@@ -86,14 +86,15 @@ export class KafkaEventFunctionsService {
               KAFKA_EVENT_EMITTER,
             ),
         );
+        return r;
       })
       .reduce((prev, curr) => {
         return prev.concat(curr);
       });
     for (const eventHandler of eventHandlers) {
       this.eventHandlerMap.set(eventHandler.topic, {
-        instance: eventHandler.target,
-        method: eventHandler.methodName,
+        target: eventHandler.target,
+        methodName: eventHandler.methodName,
       });
     }
     for (const eventEmitter of eventEmitters) {
@@ -137,7 +138,7 @@ export class KafkaEventFunctionsService {
       this.kafkaLogger.warn(`Unable to find handler for topic ${topic}`);
       return;
     }
-    return await handler.instance[handler.method].apply(handler.instance, [
+    return await handler.target[handler.methodName].apply(handler.target, [
       event,
     ]);
   }
@@ -173,6 +174,6 @@ export class KafkaEventFunctionsService {
     if (handler == null) {
       return null;
     }
-    return handler;
+    return { ...handler, target: instance };
   }
 }
