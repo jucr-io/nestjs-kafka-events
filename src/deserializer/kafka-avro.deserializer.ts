@@ -49,7 +49,7 @@ export class KafkaAvroDeserializer {
         ? await this.schemaRegistry.decode(message.value)
         : message?.value;
       return {
-        arrival: new Date(Number(message.timestamp) * 1000) ?? new Date(),
+        arrival: new Date(Number(message.timestamp)) ?? new Date(),
         event,
         key,
       };
