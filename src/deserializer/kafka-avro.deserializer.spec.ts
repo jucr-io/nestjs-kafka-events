@@ -66,7 +66,7 @@ describe('KafkaAvroDeserializer', () => {
     const result = await kafkaAvroDeserializer.deserialize({
       value: Buffer.from('test-valyue'),
       key: Buffer.from('test-key'),
-      timestamp: Math.floor(date.valueOf() / 1000).toString(),
+      timestamp: date.valueOf().toString(),
       attributes: 0,
       offset: '10',
       size: 1,
