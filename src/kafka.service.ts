@@ -164,6 +164,9 @@ export class KafkaService
    * @private
    */
   private async subscribeToTopics(): Promise<void> {
+    if (!this.consumer) {
+      return;
+    }
     for await (const topic of this.kafkaEventFunctionsService.getEventHandlerTopics()) {
       try {
         await this.consumer.subscribe({ topic, fromBeginning: false });
